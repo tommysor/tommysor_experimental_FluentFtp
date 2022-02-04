@@ -33,6 +33,7 @@ jobs:
           echo "# dotnet test"
           #dotnet test -c Release FluentFTP.Tests.System/FluentFTP.Tests.System.csproj
           echo "# Curl"
-          curl --include ftp://localhost/
+          echo "Hello World" > testFile.txt
+          curl --upload-file "testFile.txt" ftp://localhost/
           echo "# END"
 
