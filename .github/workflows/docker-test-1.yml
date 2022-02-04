@@ -32,7 +32,7 @@ jobs:
           #docker run -d -p 21:21 -p 30000-30009:30000-30009 instrumentisto/pure-ftpd
           docker run -d -v /my/data/directory:/home/vsftpd \
           -p 20:20 -p 21:21 -p 21100-21110:21100-21110 \
-          -e FTP_USER=anonymous -e FTP_PASS=anonymous@domain.com2 \
+          -e FTP_USER=anonymous -e FTP_PASS=anonymous@domain.com \
           -e PASV_ADDRESS=127.0.0.1 -e PASV_MIN_PORT=21100 -e PASV_MAX_PORT=21110 \
           --name vsftpd --restart=always fauria/vsftpd
           
@@ -40,4 +40,8 @@ jobs:
           dotnet test -c Release FluentFTP.Tests.System/FluentFTP.Tests.System.csproj
           
           echo "# END"
+      - name: test it
+        run: |
+          echo "# dotnet test"
+          dotnet test -c Release FluentFTP.Tests.System/FluentFTP.Tests.System.csproj
 
