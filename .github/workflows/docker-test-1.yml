@@ -35,7 +35,7 @@ jobs:
           echo "# Start server"
           docker run -d -p 21:21 -p 30000-30009:30000-30009 instrumentisto/pure-ftpd
           echo "# Connect"
-          ftp localhost
-          bye
+          ftp -h
+          
           echo "# END"
           
