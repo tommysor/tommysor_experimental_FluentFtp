@@ -30,6 +30,9 @@ jobs:
         run: |
           echo "# Start server"
           docker run -d -p 21:21 -p 30000-30009:30000-30009 instrumentisto/pure-ftpd
-          dotnet test -c Release FluentFTP.Tests.System/FluentFTP.Tests.System.csproj
+          echo "# dotnet test"
+          #dotnet test -c Release FluentFTP.Tests.System/FluentFTP.Tests.System.csproj
+          echo "# Curl"
+          curl --include ftp://localhost/
           echo "# END"
 
