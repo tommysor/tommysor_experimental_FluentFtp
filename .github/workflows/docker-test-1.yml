@@ -34,6 +34,6 @@ jobs:
           #dotnet test -c Release FluentFTP.Tests.System/FluentFTP.Tests.System.csproj
           echo "# Curl"
           echo "Hello World" > testFile.txt
-          curl --upload-file "testFile.txt" ftp://localhost/
+          curl --user anonymous:ano@ano.com --upload-file "testFile.txt" ftp://localhost/
           echo "# END"
 
