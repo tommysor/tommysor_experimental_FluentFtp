@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentFTP", "FluentFTP\Flue
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "FluentFTP.Tests\Tests.csproj", "{28AA032E-CACF-4C07-BF12-C4FBE71BC8BD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentFTP.Tests.Integration", "FluentFTP.Tests.System\FluentFTP.Tests.Integration.csproj", "{FE53B94A-C1D8-4B8C-9F94-EB6F6F76E6AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FluentFTP.Tests.Integration", "FluentFTP.Tests.Integration\FluentFTP.Tests.Integration.csproj", "{FE53B94A-C1D8-4B8C-9F94-EB6F6F76E6AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
