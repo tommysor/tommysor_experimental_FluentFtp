@@ -66,88 +66,105 @@ namespace FluentFTP.Tests.System
 			Assert.False(_ftpClient.IsConnected, "IsConnected");
 		}
 
-		[Theory]
-		[InlineData(FtpDataType.Binary)]
-		[InlineData(FtpDataType.ASCII)]
-		public void UploadFile(FtpDataType ftpDataType)
+		[Fact]
+		public void DummyDirectory()
 		{
 			_ftpClient.Connect();
-			using var file = FileUtil.GetSimpleTextFile();
-			var filePath = GetPath("test.txt");
-			_ftpClient.UploadDataType = ftpDataType;
-
-			var uploadStatus = _ftpClient.Upload(file, filePath);
-			Assert.Equal(FtpStatus.Success, uploadStatus);
-
-			var hash = _ftpClient.GetChecksum(filePath);
-			Assert.True(hash.IsValid, "hash.IsValid");
-			var isVerified = hash.Verify(file);
-			Assert.True(isVerified, "hash.Verify");
+			var directory = _ftpClient.GetWorkingDirectory();
+			Assert.False(true, directory);
 		}
 
-		[Theory]
-		[InlineData(FtpDataType.Binary)]
-		[InlineData(FtpDataType.ASCII)]
-		public async Task UploadFileAsync(FtpDataType ftpDataType)
-		{
-			await _ftpClient.ConnectAsync();
-			using var file = FileUtil.GetSimpleTextFile();
-			var filePath = GetPath("test.txt");
-			_ftpClient.UploadDataType = ftpDataType;
-
-			var uploadStatus = await _ftpClient.UploadAsync(file, filePath);
-			Assert.Equal(FtpStatus.Success, uploadStatus);
-
-			var hash = await _ftpClient.GetChecksumAsync(filePath);
-			Assert.True(hash.IsValid, "hash.IsValid");
-			var isVerified = hash.Verify(file);
-			Assert.True(isVerified, "hash.Verify");
-		}
-
-		[Theory]
-		[InlineData(FtpDataType.Binary)]
-		[InlineData(FtpDataType.ASCII)]
-		public void DownloadFile(FtpDataType ftpDataType)
+		[Fact]
+		public void DummyListing()
 		{
 			_ftpClient.Connect();
-			using var originalFile = FileUtil.GetSimpleTextFile();
-			var filePath = GetPath("test.txt");
-			_ftpClient.DownloadDataType = ftpDataType;
-			// Not setting any explicit UploadDataType.
-			_ftpClient.Upload(originalFile, filePath);
-
-			using var downloadedFile = new MemoryStream();
-			var downloadResult = _ftpClient.Download(downloadedFile, filePath);
-			Assert.True(downloadResult, "downloadResult");
-
-			using var originalFileReader = new StreamReader(originalFile);
-			using var downloadedFileReader = new StreamReader(downloadedFile);
-			var originalText = originalFileReader.ReadToEnd();
-			var downloadedText = downloadedFileReader.ReadToEnd();
-			Assert.Equal(originalText, downloadedText);
+			var listing = _ftpClient.GetListing();
+			Assert.True(listing.Length > 0, "No entries in listing");
+			Assert.True(false, listing[0].FullName);
 		}
 
-		[Theory]
-		[InlineData(FtpDataType.Binary)]
-		[InlineData(FtpDataType.ASCII)]
-		public async Task DownloadFileAsync(FtpDataType ftpDataType)
-		{
-			await _ftpClient.ConnectAsync();
-			using var originalFile = FileUtil.GetSimpleTextFile();
-			var filePath = GetPath("test.txt");
-			_ftpClient.DownloadDataType = ftpDataType;
-			// Not setting any explicit UploadDataType.
-			await _ftpClient.UploadAsync(originalFile, filePath);
+		//[Theory]
+		//[InlineData(FtpDataType.Binary)]
+		//[InlineData(FtpDataType.ASCII)]
+		//public void UploadFile(FtpDataType ftpDataType)
+		//{
+		//	_ftpClient.Connect();
+		//	using var file = FileUtil.GetSimpleTextFile();
+		//	var filePath = GetPath("test.txt");
+		//	_ftpClient.UploadDataType = ftpDataType;
 
-			using var downloadedFile = new MemoryStream();
-			var downloadResult = await _ftpClient.DownloadAsync(downloadedFile, filePath);
-			Assert.True(downloadResult, "downloadResult");
+		//	var uploadStatus = _ftpClient.Upload(file, filePath);
+		//	Assert.Equal(FtpStatus.Success, uploadStatus);
 
-			using var originalFileReader = new StreamReader(originalFile);
-			using var downloadedFileReader = new StreamReader(downloadedFile);
-			var originalText = originalFileReader.ReadToEnd();
-			var downloadedText = downloadedFileReader.ReadToEnd();
-			Assert.Equal(originalText, downloadedText);
-		}
+		//	var hash = _ftpClient.GetChecksum(filePath);
+		//	Assert.True(hash.IsValid, "hash.IsValid");
+		//	var isVerified = hash.Verify(file);
+		//	Assert.True(isVerified, "hash.Verify");
+		//}
+
+		//[Theory]
+		//[InlineData(FtpDataType.Binary)]
+		//[InlineData(FtpDataType.ASCII)]
+		//public async Task UploadFileAsync(FtpDataType ftpDataType)
+		//{
+		//	await _ftpClient.ConnectAsync();
+		//	using var file = FileUtil.GetSimpleTextFile();
+		//	var filePath = GetPath("test.txt");
+		//	_ftpClient.UploadDataType = ftpDataType;
+
+		//	var uploadStatus = await _ftpClient.UploadAsync(file, filePath);
+		//	Assert.Equal(FtpStatus.Success, uploadStatus);
+
+		//	var hash = await _ftpClient.GetChecksumAsync(filePath);
+		//	Assert.True(hash.IsValid, "hash.IsValid");
+		//	var isVerified = hash.Verify(file);
+		//	Assert.True(isVerified, "hash.Verify");
+		//}
+
+		//[Theory]
+		//[InlineData(FtpDataType.Binary)]
+		//[InlineData(FtpDataType.ASCII)]
+		//public void DownloadFile(FtpDataType ftpDataType)
+		//{
+		//	_ftpClient.Connect();
+		//	using var originalFile = FileUtil.GetSimpleTextFile();
+		//	var filePath = GetPath("test.txt");
+		//	_ftpClient.DownloadDataType = ftpDataType;
+		//	// Not setting any explicit UploadDataType.
+		//	_ftpClient.Upload(originalFile, filePath);
+
+		//	using var downloadedFile = new MemoryStream();
+		//	var downloadResult = _ftpClient.Download(downloadedFile, filePath);
+		//	Assert.True(downloadResult, "downloadResult");
+
+		//	using var originalFileReader = new StreamReader(originalFile);
+		//	using var downloadedFileReader = new StreamReader(downloadedFile);
+		//	var originalText = originalFileReader.ReadToEnd();
+		//	var downloadedText = downloadedFileReader.ReadToEnd();
+		//	Assert.Equal(originalText, downloadedText);
+		//}
+
+		//[Theory]
+		//[InlineData(FtpDataType.Binary)]
+		//[InlineData(FtpDataType.ASCII)]
+		//public async Task DownloadFileAsync(FtpDataType ftpDataType)
+		//{
+		//	await _ftpClient.ConnectAsync();
+		//	using var originalFile = FileUtil.GetSimpleTextFile();
+		//	var filePath = GetPath("test.txt");
+		//	_ftpClient.DownloadDataType = ftpDataType;
+		//	// Not setting any explicit UploadDataType.
+		//	await _ftpClient.UploadAsync(originalFile, filePath);
+
+		//	using var downloadedFile = new MemoryStream();
+		//	var downloadResult = await _ftpClient.DownloadAsync(downloadedFile, filePath);
+		//	Assert.True(downloadResult, "downloadResult");
+
+		//	using var originalFileReader = new StreamReader(originalFile);
+		//	using var downloadedFileReader = new StreamReader(downloadedFile);
+		//	var originalText = originalFileReader.ReadToEnd();
+		//	var downloadedText = downloadedFileReader.ReadToEnd();
+		//	Assert.Equal(originalText, downloadedText);
+		//}
 	}
 }
