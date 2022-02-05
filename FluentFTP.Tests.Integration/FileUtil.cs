@@ -12,8 +12,8 @@ namespace FluentFTP.Tests.Integration
 	{
 		internal static Stream GetSimpleTextFile()
 		{
-			using var file = new MemoryStream();
-			using var fileWriter = new StreamWriter(file, Encoding.UTF8);
+			var file = new MemoryStream();
+			var fileWriter = new StreamWriter(file, Encoding.UTF8);
 			fileWriter.WriteLine("abc");
 			file.Position = 0;
 			return file;
