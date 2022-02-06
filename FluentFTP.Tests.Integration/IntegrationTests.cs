@@ -1,5 +1,6 @@
 using FluentFTP.Tests.Integration;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Xunit;
@@ -9,21 +10,23 @@ namespace FluentFTP.Tests.System
     public class IntegrationTests : IDisposable
     {
 		private readonly FtpClient _ftpClient;
-		/// <summary>
-		/// Ftp server only created once and used for all tests.
-		/// Use _testGuid to get separate folder for each test.
-		/// </summary>
-		private readonly Guid _testGuid;
-
-		private string GetDirPath()
-		{
-			return _testGuid.ToString();
-		}
 
 		public IntegrationTests()
 		{
 			_ftpClient = new FtpClient("localhost", 21, "testUser", "testPass");
-			_testGuid = Guid.NewGuid();
+			//var cleanScript = Environment.GetEnvironmentVariable("cleanScript");
+			//var proc = new Process
+			//{
+			//	StartInfo = new ProcessStartInfo
+			//	{
+			//		FileName = cleanScript,
+			//		//Arguments = "command line arguments to your executable",
+			//		UseShellExecute = false,
+			//		RedirectStandardOutput = true,
+			//		CreateNoWindow = true
+			//	}
+			//};
+			//proc.Start();
 		}
 
 		public void Dispose()
@@ -122,7 +125,7 @@ namespace FluentFTP.Tests.System
 			await _ftpClient.ConnectAsync();
 			using var file = FileUtil.GetSimpleTextFile();
 			//var filePath = GetPath("test.txt");
-			var filePath = "test.txt";
+			var filePath = ftpDataType + "_test.txt";
 			_ftpClient.UploadDataType = ftpDataType;
 
 			var uploadStatus = await _ftpClient.UploadAsync(file, filePath);
