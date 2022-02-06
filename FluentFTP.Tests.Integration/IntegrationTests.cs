@@ -14,19 +14,19 @@ namespace FluentFTP.Tests.System
 		public IntegrationTests()
 		{
 			_ftpClient = new FtpClient("localhost", 21, "testUser", "testPass");
-			//var cleanScript = Environment.GetEnvironmentVariable("cleanScript");
-			//var proc = new Process
-			//{
-			//	StartInfo = new ProcessStartInfo
-			//	{
-			//		FileName = cleanScript,
-			//		//Arguments = "command line arguments to your executable",
-			//		UseShellExecute = false,
-			//		RedirectStandardOutput = true,
-			//		CreateNoWindow = true
-			//	}
-			//};
-			//proc.Start();
+			var cleanScript = Environment.GetEnvironmentVariable("cleanScript");
+			var proc = new Process
+			{
+				StartInfo = new ProcessStartInfo
+				{
+					FileName = cleanScript,
+					//Arguments = "command line arguments to your executable",
+					UseShellExecute = false,
+					RedirectStandardOutput = true,
+					CreateNoWindow = true
+				}
+			};
+			proc.Start();
 		}
 
 		public void Dispose()
