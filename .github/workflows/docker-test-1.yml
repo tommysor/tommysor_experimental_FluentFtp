@@ -29,7 +29,16 @@ jobs:
       - name: Start ftp server
         run: |
           #docker run -d -p 21:21 -p 30000-30009:30000-30009 instrumentisto/pure-ftpd
-          docker run -d -v /my/data/directory:/home/vsftpd \
+          
+          echo "runner.temp: '${{ runner.temp }}'"
+          tmpDir="${{ runner.temp }}"
+          echo "tmpDir: '$tmpDir'"
+          ftpDir="${tmpDir}/ftpDir"
+          echo "ftpDir: '$ftpDir'"
+          echo "# mkdir start"
+          mkdir "$ftpDir"
+          echo "# mkdir complete"
+          docker run -d -v $ftpDir:/home/vsftpd \
           -p 20:20 -p 21:21 -p 21100-21110:21100-21110 \
           -e FTP_USER=testUser -e FTP_PASS=testPass \
           -e PASV_ADDRESS=127.0.0.1 -e PASV_MIN_PORT=21100 -e PASV_MAX_PORT=21110 \
