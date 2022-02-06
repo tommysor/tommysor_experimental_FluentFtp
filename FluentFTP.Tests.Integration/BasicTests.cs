@@ -59,23 +59,27 @@ namespace FluentFTP.Tests.Integration
 		}
 
 		[Fact]
-		public void UploadListAndDeleteFile()
+		public async Task UploadListAndDeleteFile()
 		{
-			_ftpClient.Connect();
+			await _ftpClient.ConnectAsync();
 			using var file = FileUtil.GetSimpleTextFile();
 			var fileName = "BasicTests_UploadFile.txt";
-			var uploadStatus = _ftpClient.Upload(file, fileName);
+			var uploadStatus = await _ftpClient.UploadAsync(file, fileName);
 			Assert.Equal(FtpStatus.Success, uploadStatus);
 
-			var list = _ftpClient.GetListing();
+			await Task.Delay(TimeSpan.FromSeconds(1));
+
+			var list = await _ftpClient.GetListingAsync();
 			Assert.Single(list, x => x.Name == fileName);
 
-			/*
-			 * todo: Why does DeleteFile fail here?
-			 */
-			//_ftpClient.DeleteFile(list[0].FullName);
-			//var list2 = _ftpClient.GetListing();
-			//Assert.Empty(list2);
+			await Task.Delay(TimeSpan.FromSeconds(1));
+
+			await _ftpClient.DeleteFileAsync(list[0].FullName);
+
+			await Task.Delay(TimeSpan.FromSeconds(1));
+
+			var list2 = await _ftpClient.GetListingAsync();
+			Assert.Empty(list2);
 		}
 	}
 }
