@@ -19,7 +19,7 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
+    
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -29,13 +29,32 @@ jobs:
       - name: Start ftp server
         run: |
           #docker run -d -p 21:21 -p 30000-30009:30000-30009 instrumentisto/pure-ftpd
-          docker run -d -v /my/data/directory:/home/vsftpd \
+          
+          echo "# Variables"
+          ftpDir="${{ runner.temp }}/ftpDir"
+          echo "ftpDir: '$ftpDir'"
+          
+          echo "# Make dir"
+          mkdir "$ftpDir"
+          
+          echo "# Start ftp server"
+          docker run -d -v $ftpDir:/home/vsftpd \
           -p 20:20 -p 21:21 -p 21100-21110:21100-21110 \
           -e FTP_USER=testUser -e FTP_PASS=testPass \
           -e PASV_ADDRESS=127.0.0.1 -e PASV_MIN_PORT=21100 -e PASV_MAX_PORT=21110 \
           --name vsftpd --restart=always fauria/vsftpd
       - name: Run tests
         run: |
-          echo "# dotnet test"
+          #echo "# Variables"
+          #export cleanScript="${{ GITHUB.WORKSPACE }}/.github/workflows/cleanFtp.sh"
+          #echo "cleanScript: '$cleanScript'"
+          
+          echo "# Run tests"
           dotnet test -c Release FluentFTP.Tests.Integration/FluentFTP.Tests.Integration.csproj
-
+      
+      - name: Check dir
+        if: always()
+        run: |
+          echo "# list start"
+          find ${{ runner.temp }}
+          echo "# list completed"

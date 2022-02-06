@@ -1,5 +1,6 @@
 using FluentFTP.Tests.Integration;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Xunit;
@@ -9,22 +10,11 @@ namespace FluentFTP.Tests.System
     public class IntegrationTests : IDisposable
     {
 		private readonly FtpClient _ftpClient;
-		/// <summary>
-		/// Ftp server only created once and used for all tests.
-		/// Use _testGuid to get separate folder for each test.
-		/// </summary>
-		private readonly Guid _testGuid;
-
-		private string GetPath(string filename)
-		{
-			var path = Path.Combine(_testGuid.ToString(), filename);
-			return path;
-		}
 
 		public IntegrationTests()
 		{
-			_ftpClient = new FtpClient("localhost", 21, "testUser", "testPass");
-			_testGuid = Guid.NewGuid();
+			_ftpClient = FtpUtil.GetFtpClient();
+			FtpUtil.CleanFtp(_ftpClient);
 		}
 
 		public void Dispose()
@@ -34,38 +24,6 @@ namespace FluentFTP.Tests.System
 			GC.SuppressFinalize(this);
 		}
 
-		[Fact]
-		public void Connect()
-		{
-			_ftpClient.Connect();
-			Assert.True(_ftpClient.IsConnected, "IsConnected");
-			Assert.True(_ftpClient.IsAuthenticated, "IsAuthenticated");
-		}
-
-		[Fact]
-		public async Task ConnectAsync()
-		{
-			await _ftpClient.ConnectAsync();
-			Assert.True(_ftpClient.IsConnected, "IsConnected");
-			Assert.True(_ftpClient.IsAuthenticated, "IsAuthenticated");
-		}
-
-		[Fact]
-		public void Disconnect()
-		{
-			_ftpClient.Connect();
-			_ftpClient.Disconnect();
-			Assert.False(_ftpClient.IsConnected, "IsConnected");
-		}
-
-		[Fact]
-		public async Task DisconnectAsync()
-		{
-			await _ftpClient.ConnectAsync();
-			await _ftpClient.DisconnectAsync();
-			Assert.False(_ftpClient.IsConnected, "IsConnected");
-		}
-
 		[Theory]
 		[InlineData(FtpDataType.Binary)]
 		[InlineData(FtpDataType.ASCII)]
@@ -73,16 +31,11 @@ namespace FluentFTP.Tests.System
 		{
 			_ftpClient.Connect();
 			using var file = FileUtil.GetSimpleTextFile();
-			var filePath = GetPath("test.txt");
+			var filePath = "test.txt";
 			_ftpClient.UploadDataType = ftpDataType;
 
 			var uploadStatus = _ftpClient.Upload(file, filePath);
 			Assert.Equal(FtpStatus.Success, uploadStatus);
-
-			var hash = _ftpClient.GetChecksum(filePath);
-			Assert.True(hash.IsValid, "hash.IsValid");
-			var isVerified = hash.Verify(file);
-			Assert.True(isVerified, "hash.Verify");
 		}
 
 		[Theory]
@@ -92,16 +45,11 @@ namespace FluentFTP.Tests.System
 		{
 			await _ftpClient.ConnectAsync();
 			using var file = FileUtil.GetSimpleTextFile();
-			var filePath = GetPath("test.txt");
+			var filePath = "test.txt";
 			_ftpClient.UploadDataType = ftpDataType;
 
 			var uploadStatus = await _ftpClient.UploadAsync(file, filePath);
 			Assert.Equal(FtpStatus.Success, uploadStatus);
-
-			var hash = await _ftpClient.GetChecksumAsync(filePath);
-			Assert.True(hash.IsValid, "hash.IsValid");
-			var isVerified = hash.Verify(file);
-			Assert.True(isVerified, "hash.Verify");
 		}
 
 		[Theory]
@@ -111,7 +59,7 @@ namespace FluentFTP.Tests.System
 		{
 			_ftpClient.Connect();
 			using var originalFile = FileUtil.GetSimpleTextFile();
-			var filePath = GetPath("test.txt");
+			var filePath = "test.txt";
 			_ftpClient.DownloadDataType = ftpDataType;
 			// Not setting any explicit UploadDataType.
 			_ftpClient.Upload(originalFile, filePath);
@@ -134,7 +82,7 @@ namespace FluentFTP.Tests.System
 		{
 			await _ftpClient.ConnectAsync();
 			using var originalFile = FileUtil.GetSimpleTextFile();
-			var filePath = GetPath("test.txt");
+			var filePath = "test.txt";
 			_ftpClient.DownloadDataType = ftpDataType;
 			// Not setting any explicit UploadDataType.
 			await _ftpClient.UploadAsync(originalFile, filePath);
