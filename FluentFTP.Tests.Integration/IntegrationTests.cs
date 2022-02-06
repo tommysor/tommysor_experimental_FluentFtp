@@ -83,43 +83,44 @@ namespace FluentFTP.Tests.System
 			Assert.True(false, listing[0].FullName);
 		}
 
-		//[Theory]
-		//[InlineData(FtpDataType.Binary)]
-		//[InlineData(FtpDataType.ASCII)]
-		//public void UploadFile(FtpDataType ftpDataType)
-		//{
-		//	_ftpClient.Connect();
-		//	using var file = FileUtil.GetSimpleTextFile();
-		//	var filePath = GetPath("test.txt");
-		//	_ftpClient.UploadDataType = ftpDataType;
+		[Theory]
+		[InlineData(FtpDataType.Binary)]
+		[InlineData(FtpDataType.ASCII)]
+		public void UploadFile(FtpDataType ftpDataType)
+		{
+			_ftpClient.Connect();
+			using var file = FileUtil.GetSimpleTextFile();
+			var filePath = GetPath("test.txt");
+			_ftpClient.UploadDataType = ftpDataType;
 
-		//	var uploadStatus = _ftpClient.Upload(file, filePath);
-		//	Assert.Equal(FtpStatus.Success, uploadStatus);
+			var uploadStatus = _ftpClient.Upload(file, filePath);
+			Assert.Equal(FtpStatus.Success, uploadStatus);
 
-		//	var hash = _ftpClient.GetChecksum(filePath);
-		//	Assert.True(hash.IsValid, "hash.IsValid");
-		//	var isVerified = hash.Verify(file);
-		//	Assert.True(isVerified, "hash.Verify");
-		//}
+			var hash = _ftpClient.GetChecksum(filePath);
+			Assert.True(hash.IsValid, "hash.IsValid");
+			var isVerified = hash.Verify(file);
+			Assert.True(isVerified, "hash.Verify");
+		}
 
-		//[Theory]
-		//[InlineData(FtpDataType.Binary)]
-		//[InlineData(FtpDataType.ASCII)]
-		//public async Task UploadFileAsync(FtpDataType ftpDataType)
-		//{
-		//	await _ftpClient.ConnectAsync();
-		//	using var file = FileUtil.GetSimpleTextFile();
-		//	var filePath = GetPath("test.txt");
-		//	_ftpClient.UploadDataType = ftpDataType;
+		[Theory]
+		[InlineData(FtpDataType.Binary)]
+		[InlineData(FtpDataType.ASCII)]
+		public async Task UploadFileAsync(FtpDataType ftpDataType)
+		{
+			await _ftpClient.ConnectAsync();
+			using var file = FileUtil.GetSimpleTextFile();
+			//var filePath = GetPath("test.txt");
+			var filePath = "test.txt";
+			_ftpClient.UploadDataType = ftpDataType;
 
-		//	var uploadStatus = await _ftpClient.UploadAsync(file, filePath);
-		//	Assert.Equal(FtpStatus.Success, uploadStatus);
+			var uploadStatus = await _ftpClient.UploadAsync(file, filePath);
+			Assert.Equal(FtpStatus.Success, uploadStatus);
 
-		//	var hash = await _ftpClient.GetChecksumAsync(filePath);
-		//	Assert.True(hash.IsValid, "hash.IsValid");
-		//	var isVerified = hash.Verify(file);
-		//	Assert.True(isVerified, "hash.Verify");
-		//}
+			var hash = await _ftpClient.GetChecksumAsync(filePath);
+			Assert.True(hash.IsValid, "hash.IsValid");
+			var isVerified = hash.Verify(file);
+			Assert.True(isVerified, "hash.Verify");
+		}
 
 		//[Theory]
 		//[InlineData(FtpDataType.Binary)]
