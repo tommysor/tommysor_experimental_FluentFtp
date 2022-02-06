@@ -70,6 +70,9 @@ namespace FluentFTP.Tests.Integration
 			var list = _ftpClient.GetListing();
 			Assert.Single(list, x => x.Name == fileName);
 
+			/*
+			 * todo: Why does DeleteFile fail here?
+			 */
 			//_ftpClient.DeleteFile(list[0].FullName);
 			//var list2 = _ftpClient.GetListing();
 			//Assert.Empty(list2);
