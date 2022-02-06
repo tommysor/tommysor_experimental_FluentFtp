@@ -30,7 +30,7 @@ namespace FluentFTP.Tests.System
 				EnableRaisingEvents = true
 			};
 			proc.Start();
-			var output = proc.StandardOutput.ReadToEnd();
+			var output = proc.StandardError.ReadToEnd();
 			throw new InvalidOperationException(output);
 		}
 
