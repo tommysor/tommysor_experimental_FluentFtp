@@ -78,31 +78,31 @@ namespace FluentFTP.Tests.System
 		public void DummyListing()
 		{
 			_ftpClient.Connect();
-			var listing = _ftpClient.GetListing();
+			var listing = _ftpClient.GetListing(null, FtpListOption.Recursive);
 			Assert.True(listing.Length > 0, "No entries in listing");
 			Assert.True(false, listing[0].FullName);
 		}
 
-		[Theory]
-		[InlineData(FtpDataType.Binary)]
-		[InlineData(FtpDataType.ASCII)]
-		public void UploadFile(FtpDataType ftpDataType)
-		{
-			_ftpClient.Connect();
-			using var file = FileUtil.GetSimpleTextFile();
-			var filePath = GetPath("test.txt");
-			var dirPath = new FileInfo(filePath).Directory.FullName;
-			_ftpClient.CreateDirectory(dirPath);
-			_ftpClient.UploadDataType = ftpDataType;
+		//[Theory]
+		//[InlineData(FtpDataType.Binary)]
+		//[InlineData(FtpDataType.ASCII)]
+		//public void UploadFile(FtpDataType ftpDataType)
+		//{
+		//	_ftpClient.Connect();
+		//	using var file = FileUtil.GetSimpleTextFile();
+		//	var filePath = GetPath("test.txt");
+		//	var dirPath = new FileInfo(filePath).Directory.FullName;
+		//	_ftpClient.CreateDirectory(dirPath);
+		//	_ftpClient.UploadDataType = ftpDataType;
 
-			var uploadStatus = _ftpClient.Upload(file, filePath);
-			Assert.Equal(FtpStatus.Success, uploadStatus);
+		//	var uploadStatus = _ftpClient.Upload(file, filePath);
+		//	Assert.Equal(FtpStatus.Success, uploadStatus);
 
-			//var hash = _ftpClient.GetChecksum(filePath);
-			//Assert.True(hash.IsValid, "hash.IsValid");
-			//var isVerified = hash.Verify(file);
-			//Assert.True(isVerified, "hash.Verify");
-		}
+		//	//var hash = _ftpClient.GetChecksum(filePath);
+		//	//Assert.True(hash.IsValid, "hash.IsValid");
+		//	//var isVerified = hash.Verify(file);
+		//	//Assert.True(isVerified, "hash.Verify");
+		//}
 
 		[Theory]
 		[InlineData(FtpDataType.Binary)]
