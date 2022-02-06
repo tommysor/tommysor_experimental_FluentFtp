@@ -15,16 +15,19 @@ namespace FluentFTP.Tests.System
 		{
 			_ftpClient = new FtpClient("localhost", 21, "testUser", "testPass");
 			var cleanScript = Environment.GetEnvironmentVariable("cleanScript");
+			var escapedArgs = cleanScript.Replace("\"", "\\\"");
 			var proc = new Process
 			{
 				StartInfo = new ProcessStartInfo
 				{
-					FileName = cleanScript,
-					//Arguments = "command line arguments to your executable",
-					UseShellExecute = false,
+					FileName = "bash",
+					Arguments = $"-c \"{escapedArgs}\"",
 					RedirectStandardOutput = true,
+					RedirectStandardError = true,
+					UseShellExecute = false,
 					CreateNoWindow = true
-				}
+				},
+				EnableRaisingEvents = true
 			};
 			proc.Start();
 		}
