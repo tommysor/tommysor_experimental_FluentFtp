@@ -15,6 +15,7 @@ namespace FluentFTP.Tests.System
 		{
 			_ftpClient = new FtpClient("localhost", 21, "testUser", "testPass");
 			var cleanScript = Environment.GetEnvironmentVariable("cleanScript");
+			throw new InvalidOperationException(cleanScript);
 			var escapedArgs = cleanScript.Replace("\"", "\\\"");
 			var proc = new Process
 			{
