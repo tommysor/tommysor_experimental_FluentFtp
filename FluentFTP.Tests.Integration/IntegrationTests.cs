@@ -15,10 +15,9 @@ namespace FluentFTP.Tests.System
 		/// </summary>
 		private readonly Guid _testGuid;
 
-		private string GetPath(string filename)
+		private string GetDirPath()
 		{
-			var path = Path.Combine(_testGuid.ToString(), filename);
-			return path;
+			return _testGuid.ToString();
 		}
 
 		public IntegrationTests()
@@ -66,29 +65,33 @@ namespace FluentFTP.Tests.System
 			Assert.False(_ftpClient.IsConnected, "IsConnected");
 		}
 
-		[Fact]
-		public void DummyDirectory()
-		{
-			_ftpClient.Connect();
-			var directory = _ftpClient.GetWorkingDirectory();
-			Assert.False(true, directory);
-		}
+		//[Fact]
+		//public void DummyDirectory()
+		//{
+		//	_ftpClient.Connect();
+		//	var directory = _ftpClient.GetWorkingDirectory();
+		//	Assert.False(true, directory);
+		//}
 
-		[Fact]
-		public void DummyListing()
-		{
-			_ftpClient.Connect();
+		//[Fact]
+		//public void DummyListing()
+		//{
+		//	_ftpClient.Connect();
 
-			using var file = FileUtil.GetSimpleTextFile();
-			var filePath = "test.txt";
+		//	using var file = FileUtil.GetSimpleTextFile();
+		//	//var filePath = "test.txt";
+		//	var dirPath = GetDirPath();
+		//	var filePath = Path.Combine(dirPath, "test.txt");
+			
+		//	_ftpClient.CreateDirectory(dirPath);
 
-			var uploadStatus = _ftpClient.Upload(file, filePath);
-			Assert.Equal(FtpStatus.Success, uploadStatus);
+		//	//var uploadStatus = _ftpClient.Upload(file, filePath);
+		//	//Assert.Equal(FtpStatus.Success, uploadStatus);
 
-			var listing = _ftpClient.GetListing(null, FtpListOption.Recursive);
-			Assert.True(listing.Length > 0, "No entries in listing");
-			Assert.True(false, listing[0].FullName);
-		}
+		//	var listing = _ftpClient.GetListing(null, FtpListOption.Recursive);
+		//	Assert.True(listing.Length > 0, "No entries in listing");
+		//	Assert.True(false, listing[0].FullName);
+		//}
 
 		//[Theory]
 		//[InlineData(FtpDataType.Binary)]

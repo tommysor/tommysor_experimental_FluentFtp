@@ -47,4 +47,10 @@ jobs:
         run: |
           echo "# dotnet test"
           dotnet test -c Release FluentFTP.Tests.Integration/FluentFTP.Tests.Integration.csproj
-
+      
+      - name: Check dir
+        if: always()
+        run: |
+          echo "# list start"
+          find ${{ runner.temp }}
+          echo "# list completed"
