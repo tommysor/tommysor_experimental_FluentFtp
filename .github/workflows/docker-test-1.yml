@@ -20,10 +20,6 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     
-    env:
-      ftpDir: "${RUNNER_TEMP}/ftpDir"
-      cleanScript: "${GITHUB_WORKSPACE}/.github/workflows/cleanFtp.sh"
-    
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -35,6 +31,7 @@ jobs:
           #docker run -d -p 21:21 -p 30000-30009:30000-30009 instrumentisto/pure-ftpd
           
           echo "# Variables"
+          ftpDir="${{ runner.temp }}/ftpDir"
           echo "ftpDir: '$ftpDir'"
           
           echo "# Make dir"
@@ -48,6 +45,11 @@ jobs:
           --name vsftpd --restart=always fauria/vsftpd
       - name: Run tests
         run: |
+          echo "# Variables"
+          export cleanScript="${{ GITHUB.WORKSPACE }}/.github/workflows/cleanFtp.sh"
+          echo "cleanScript: '$cleanScript'"
+          
+          echo "# Run tests"
           dotnet test -c Release FluentFTP.Tests.Integration/FluentFTP.Tests.Integration.csproj
       
       - name: Check dir
