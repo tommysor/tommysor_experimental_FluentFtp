@@ -1,1 +1,1 @@
-rm -r $ftpDir
+rm -r $ftpDir/testUser
