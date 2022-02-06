@@ -45,9 +45,9 @@ jobs:
           --name vsftpd --restart=always fauria/vsftpd
       - name: Run tests
         run: |
-          echo "# Variables"
-          export cleanScript="${{ GITHUB.WORKSPACE }}/.github/workflows/cleanFtp.sh"
-          echo "cleanScript: '$cleanScript'"
+          #echo "# Variables"
+          #export cleanScript="${{ GITHUB.WORKSPACE }}/.github/workflows/cleanFtp.sh"
+          #echo "cleanScript: '$cleanScript'"
           
           echo "# Run tests"
           dotnet test -c Release FluentFTP.Tests.Integration/FluentFTP.Tests.Integration.csproj

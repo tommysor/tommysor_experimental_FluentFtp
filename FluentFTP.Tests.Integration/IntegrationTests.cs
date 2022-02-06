@@ -13,34 +13,8 @@ namespace FluentFTP.Tests.System
 
 		public IntegrationTests()
 		{
-			_ftpClient = new FtpClient("localhost", 21, "testUser", "testPass");
-			//var cleanScript = Environment.GetEnvironmentVariable("cleanScript");
-			//var escapedArgs = cleanScript.Replace("\"", "\\\"");
-			//var proc = new Process
-			//{
-			//	StartInfo = new ProcessStartInfo
-			//	{
-			//		FileName = "bash",
-			//		Arguments = $"-c \"{escapedArgs}\"",
-			//		RedirectStandardOutput = true,
-			//		RedirectStandardError = true,
-			//		UseShellExecute = false,
-			//		CreateNoWindow = true
-			//	},
-			//	EnableRaisingEvents = true
-			//};
-			//proc.Start();
-			//var output = proc.StandardError.ReadToEnd();
-			//throw new InvalidOperationException(output);
-
-			_ftpClient.Connect();
-			var list = _ftpClient.GetListing();
-			foreach (var item in list)
-			{
-				_ftpClient.DeleteFile(item.FullName);
-			}
-			
-			_ftpClient.Disconnect();
+			_ftpClient = FtpUtil.GetFtpClient();
+			FtpUtil.CleanFtp(_ftpClient);
 		}
 
 		public void Dispose()
@@ -50,86 +24,19 @@ namespace FluentFTP.Tests.System
 			GC.SuppressFinalize(this);
 		}
 
-		[Fact]
-		public void Connect()
+		[Theory]
+		[InlineData(FtpDataType.Binary)]
+		[InlineData(FtpDataType.ASCII)]
+		public void UploadFile(FtpDataType ftpDataType)
 		{
 			_ftpClient.Connect();
-			Assert.True(_ftpClient.IsConnected, "IsConnected");
-			Assert.True(_ftpClient.IsAuthenticated, "IsAuthenticated");
+			using var file = FileUtil.GetSimpleTextFile();
+			var filePath = ftpDataType + "_test.txt";
+			_ftpClient.UploadDataType = ftpDataType;
+
+			var uploadStatus = _ftpClient.Upload(file, filePath);
+			Assert.Equal(FtpStatus.Success, uploadStatus);
 		}
-
-		[Fact]
-		public async Task ConnectAsync()
-		{
-			await _ftpClient.ConnectAsync();
-			Assert.True(_ftpClient.IsConnected, "IsConnected");
-			Assert.True(_ftpClient.IsAuthenticated, "IsAuthenticated");
-		}
-
-		[Fact]
-		public void Disconnect()
-		{
-			_ftpClient.Connect();
-			_ftpClient.Disconnect();
-			Assert.False(_ftpClient.IsConnected, "IsConnected");
-		}
-
-		[Fact]
-		public async Task DisconnectAsync()
-		{
-			await _ftpClient.ConnectAsync();
-			await _ftpClient.DisconnectAsync();
-			Assert.False(_ftpClient.IsConnected, "IsConnected");
-		}
-
-		//[Fact]
-		//public void DummyDirectory()
-		//{
-		//	_ftpClient.Connect();
-		//	var directory = _ftpClient.GetWorkingDirectory();
-		//	Assert.False(true, directory);
-		//}
-
-		//[Fact]
-		//public void DummyListing()
-		//{
-		//	_ftpClient.Connect();
-
-		//	using var file = FileUtil.GetSimpleTextFile();
-		//	//var filePath = "test.txt";
-		//	var dirPath = GetDirPath();
-		//	var filePath = Path.Combine(dirPath, "test.txt");
-			
-		//	_ftpClient.CreateDirectory(dirPath);
-
-		//	//var uploadStatus = _ftpClient.Upload(file, filePath);
-		//	//Assert.Equal(FtpStatus.Success, uploadStatus);
-
-		//	var listing = _ftpClient.GetListing(null, FtpListOption.Recursive);
-		//	Assert.True(listing.Length > 0, "No entries in listing");
-		//	Assert.True(false, listing[0].FullName);
-		//}
-
-		//[Theory]
-		//[InlineData(FtpDataType.Binary)]
-		//[InlineData(FtpDataType.ASCII)]
-		//public void UploadFile(FtpDataType ftpDataType)
-		//{
-		//	_ftpClient.Connect();
-		//	using var file = FileUtil.GetSimpleTextFile();
-		//	var filePath = GetPath("test.txt");
-		//	var dirPath = new FileInfo(filePath).Directory.FullName;
-		//	_ftpClient.CreateDirectory(dirPath);
-		//	_ftpClient.UploadDataType = ftpDataType;
-
-		//	var uploadStatus = _ftpClient.Upload(file, filePath);
-		//	Assert.Equal(FtpStatus.Success, uploadStatus);
-
-		//	//var hash = _ftpClient.GetChecksum(filePath);
-		//	//Assert.True(hash.IsValid, "hash.IsValid");
-		//	//var isVerified = hash.Verify(file);
-		//	//Assert.True(isVerified, "hash.Verify");
-		//}
 
 		[Theory]
 		[InlineData(FtpDataType.Binary)]
@@ -138,17 +45,11 @@ namespace FluentFTP.Tests.System
 		{
 			await _ftpClient.ConnectAsync();
 			using var file = FileUtil.GetSimpleTextFile();
-			//var filePath = GetPath("test.txt");
 			var filePath = ftpDataType + "_test.txt";
 			_ftpClient.UploadDataType = ftpDataType;
 
 			var uploadStatus = await _ftpClient.UploadAsync(file, filePath);
 			Assert.Equal(FtpStatus.Success, uploadStatus);
-
-			//var hash = await _ftpClient.GetChecksumAsync(filePath);
-			//Assert.True(hash.IsValid, "hash.IsValid");
-			//var isVerified = hash.Verify(file);
-			//Assert.True(isVerified, "hash.Verify");
 		}
 
 		//[Theory]
