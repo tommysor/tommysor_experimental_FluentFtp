@@ -78,6 +78,13 @@ namespace FluentFTP.Tests.System
 		public void DummyListing()
 		{
 			_ftpClient.Connect();
+
+			using var file = FileUtil.GetSimpleTextFile();
+			var filePath = "test.txt";
+
+			var uploadStatus = _ftpClient.Upload(file, filePath);
+			Assert.Equal(FtpStatus.Success, uploadStatus);
+
 			var listing = _ftpClient.GetListing(null, FtpListOption.Recursive);
 			Assert.True(listing.Length > 0, "No entries in listing");
 			Assert.True(false, listing[0].FullName);
