@@ -21,8 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     
     env:
-      ftpDir: "${{ runner.temp }}/ftpDir"
-      cleanScript: "${{ GITHUB_WORKSPACE }}/.github/workflows/cleanFtp.sh"
+      ftpDir: "${RUNNER_TEMP}/ftpDir"
+      cleanScript: "${GITHUB_WORKSPACE}/.github/workflows/cleanFtp.sh"
     
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
