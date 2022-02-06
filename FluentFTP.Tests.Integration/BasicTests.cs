@@ -70,9 +70,13 @@ namespace FluentFTP.Tests.Integration
 			await Task.Delay(TimeSpan.FromSeconds(1));
 
 			var list = await _ftpClient.GetListingAsync();
+			
+			// todo: Why do I get either none, or "test.txt" (leftover from IntegrationTests). Not {fileName}?
 			var listLength = list.Length;
-			var firstOrDefault = list.FirstOrDefault();
+			var firstOrDefault = list.FirstOrDefault();		
 			Assert.True(false, $"listLength: '{listLength}'. Name: '{firstOrDefault?.Name}'. FullName: '{firstOrDefault?.FullName}'");
+			
+			
 			Assert.Single(list, x => x.Name == fileName);
 
 			await Task.Delay(TimeSpan.FromSeconds(1));

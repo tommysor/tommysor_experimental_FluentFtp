@@ -24,6 +24,7 @@ namespace FluentFTP.Tests.Integration
 			}
 
 			fileWriter.WriteLine(stringBuilder.ToString());
+			fileWriter.Flush();
 			file.Position = 0;
 			return file;
 		}
