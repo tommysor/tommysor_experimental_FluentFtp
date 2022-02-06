@@ -14,24 +14,33 @@ namespace FluentFTP.Tests.System
 		public IntegrationTests()
 		{
 			_ftpClient = new FtpClient("localhost", 21, "testUser", "testPass");
-			var cleanScript = Environment.GetEnvironmentVariable("cleanScript");
-			var escapedArgs = cleanScript.Replace("\"", "\\\"");
-			var proc = new Process
+			//var cleanScript = Environment.GetEnvironmentVariable("cleanScript");
+			//var escapedArgs = cleanScript.Replace("\"", "\\\"");
+			//var proc = new Process
+			//{
+			//	StartInfo = new ProcessStartInfo
+			//	{
+			//		FileName = "bash",
+			//		Arguments = $"-c \"{escapedArgs}\"",
+			//		RedirectStandardOutput = true,
+			//		RedirectStandardError = true,
+			//		UseShellExecute = false,
+			//		CreateNoWindow = true
+			//	},
+			//	EnableRaisingEvents = true
+			//};
+			//proc.Start();
+			//var output = proc.StandardError.ReadToEnd();
+			//throw new InvalidOperationException(output);
+
+			_ftpClient.Connect();
+			var list = _ftpClient.GetListing();
+			foreach (var item in list)
 			{
-				StartInfo = new ProcessStartInfo
-				{
-					FileName = "bash",
-					Arguments = $"-c \"{escapedArgs}\"",
-					RedirectStandardOutput = true,
-					RedirectStandardError = true,
-					UseShellExecute = false,
-					CreateNoWindow = true
-				},
-				EnableRaisingEvents = true
-			};
-			proc.Start();
-			var output = proc.StandardError.ReadToEnd();
-			throw new InvalidOperationException(output);
+				_ftpClient.DeleteFile(item.FullName);
+			}
+			
+			_ftpClient.Disconnect();
 		}
 
 		public void Dispose()
