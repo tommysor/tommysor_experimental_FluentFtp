@@ -46,7 +46,7 @@ jobs:
 
       - name: Run tests
         run: |
-          dotnet test -c Release FluentFTP.Tests.Integration/FluentFTP.Tests.Integration.csproj
+          dotnet test -c Release FluentFTP.Tests.Integration/FluentFTP.Tests.Integration.csproj -p:ParallelizeTestCollections=false
       
       - name: Check dir
         if: always()
