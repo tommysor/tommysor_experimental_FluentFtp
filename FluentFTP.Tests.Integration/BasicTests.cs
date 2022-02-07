@@ -19,7 +19,7 @@ namespace FluentFTP.Tests.Integration
 		public BasicTests()
 		{
 			_ftpContainer = FtpUtil.GetFtpContainer();
-			_ftpContainer.StartAsync().Wait();
+			//_ftpContainer.StartAsync().Wait();
 			_ftpClient = FtpUtil.GetFtpClient();
 		}
 
@@ -32,33 +32,35 @@ namespace FluentFTP.Tests.Integration
 			GC.SuppressFinalize(this);
 		}
 
-		[Fact]
-		public void Connect()
-		{
-			_ftpClient.Connect();
-			Assert.True(_ftpClient.IsConnected, "IsConnected");
-			Assert.True(_ftpClient.IsAuthenticated, "IsAuthenticated");
-		}
+		//[Fact]
+		//public void Connect()
+		//{
+		//	_ftpClient.Connect();
+		//	Assert.True(_ftpClient.IsConnected, "IsConnected");
+		//	Assert.True(_ftpClient.IsAuthenticated, "IsAuthenticated");
+		//}
 
 		[Fact]
 		public async Task ConnectAsync()
 		{
+			await _ftpContainer.StartAsync();
 			await _ftpClient.ConnectAsync();
 			Assert.True(_ftpClient.IsConnected, "IsConnected");
 			Assert.True(_ftpClient.IsAuthenticated, "IsAuthenticated");
 		}
 
-		[Fact]
-		public void Disconnect()
-		{
-			_ftpClient.Connect();
-			_ftpClient.Disconnect();
-			Assert.False(_ftpClient.IsConnected, "IsConnected");
-		}
+		//[Fact]
+		//public void Disconnect()
+		//{
+		//	_ftpClient.Connect();
+		//	_ftpClient.Disconnect();
+		//	Assert.False(_ftpClient.IsConnected, "IsConnected");
+		//}
 
 		[Fact]
 		public async Task DisconnectAsync()
 		{
+			await _ftpContainer.StartAsync();
 			await _ftpClient.ConnectAsync();
 			await _ftpClient.DisconnectAsync();
 			Assert.False(_ftpClient.IsConnected, "IsConnected");
@@ -67,6 +69,7 @@ namespace FluentFTP.Tests.Integration
 		[Fact]
 		public async Task UploadListAndDeleteFile()
 		{
+			await _ftpContainer.StartAsync();
 			await _ftpClient.ConnectAsync();
 			using var file = FileUtil.GetSimpleTextFile();
 			var fileName = "BasicTests_UploadFile.txt";
