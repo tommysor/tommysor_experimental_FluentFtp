@@ -11,9 +11,9 @@ namespace FluentFTP.Tests.Integration
 {
 	internal class FtpUtil
 	{
-		internal static FtpClient GetFtpClient()
+		internal static FtpClient GetFtpClient(int port)
 		{
-			var ftpClient = new FtpClient("localhost", 21, "testUser", "testPass");
+			var ftpClient = new FtpClient("localhost", port, "testUser", "testPass");
 			return ftpClient;
 		}
 

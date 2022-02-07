@@ -19,7 +19,7 @@ namespace FluentFTP.Tests.Integration
 		public BasicTests()
 		{
 			_ftpContainer = FtpUtil.GetFtpContainer(8021);
-			_ftpClient = FtpUtil.GetFtpClient();
+			_ftpClient = FtpUtil.GetFtpClient(8021);
 		}
 
 		public async Task InitializeAsync()
