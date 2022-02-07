@@ -29,6 +29,15 @@ namespace FluentFTP.Tests.Integration
 			ftpClient.Disconnect();
 		}
 
+		private static Random random;
+		internal static int GetRandomPort()
+		{
+			if (random is null)
+				random = new Random();
+
+			return random.Next(8000, 9000);
+		}
+
 		internal static TestcontainersContainer GetFtpContainer(int port)
 		{
 			var builder = new TestcontainersBuilder<TestcontainersContainer>()
