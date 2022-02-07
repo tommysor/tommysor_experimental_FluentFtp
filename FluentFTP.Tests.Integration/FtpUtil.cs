@@ -43,7 +43,7 @@ namespace FluentFTP.Tests.Integration
 			var builder = new TestcontainersBuilder<TestcontainersContainer>()
 				.WithImage("fauria/vsftpd")
 				.WithName("vsftpd")
-				.WithPortBinding(20, true)
+				.WithPortBinding(20, 20)
 				.WithPortBinding(port, 21)
 				.WithEnvironment("FTP_USER", "testUser")
 				.WithEnvironment("FTP_PASS", "testPass")
@@ -54,7 +54,7 @@ namespace FluentFTP.Tests.Integration
 				;
 			for (var i = 21100; i <= 21110; i++)
 			{
-				builder.WithPortBinding(i, true);
+				builder.WithPortBinding(i, i);
 			}
 			
 			
