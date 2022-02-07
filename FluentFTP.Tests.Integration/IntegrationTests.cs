@@ -15,7 +15,7 @@ namespace FluentFTP.Tests.System
 
 		public IntegrationTests()
 		{
-			_ftpContainer = FtpUtil.GetFtpContainer();
+			_ftpContainer = FtpUtil.GetFtpContainer(8121);
 			_ftpContainer.StartAsync().Wait();
 			_ftpClient = FtpUtil.GetFtpClient();
 			FtpUtil.CleanFtp(_ftpClient);
