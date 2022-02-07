@@ -72,21 +72,23 @@ namespace FluentFTP.Tests.Integration
 			var list = await _ftpClient.GetListingAsync();
 			
 			// todo: Why do I get either none, or "test.txt" (leftover from IntegrationTests). Not {fileName}?
-			var listLength = list.Length;
-			var firstOrDefault = list.FirstOrDefault();		
-			Assert.True(false, $"listLength: '{listLength}'. Name: '{firstOrDefault?.Name}'. FullName: '{firstOrDefault?.FullName}'");
+			//var listLength = list.Length;
+			//var firstOrDefault = list.FirstOrDefault();		
+			//Assert.True(false, $"listLength: '{listLength}'. Name: '{firstOrDefault?.Name}'. FullName: '{firstOrDefault?.FullName}'");
 			
-			
-			Assert.Single(list, x => x.Name == fileName);
+			var listItem = list.FirstOrDefault(x => x.Name == fileName);
+			//Assert.Single(list, x => x.Name == fileName);
+			Assert.NotNull(listItem);
 
 			await Task.Delay(TimeSpan.FromSeconds(1));
 
-			await _ftpClient.DeleteFileAsync(list[0].FullName);
+			await _ftpClient.DeleteFileAsync(listItem.FullName);
 
 			await Task.Delay(TimeSpan.FromSeconds(1));
 
 			var list2 = await _ftpClient.GetListingAsync();
-			Assert.Empty(list2);
+			//Assert.Empty(list2);
+			Assert.DoesNotContain(list2, x => x.Name == fileName);
 		}
 	}
 }
