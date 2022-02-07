@@ -29,13 +29,13 @@ namespace FluentFTP.Tests.Integration
 			ftpClient.Disconnect();
 		}
 
-		internal static TestcontainersContainer GetFtpContainer()
+		internal static TestcontainersContainer GetFtpContainer(int port)
 		{
 			var builder = new TestcontainersBuilder<TestcontainersContainer>()
 				.WithImage("fauria/vsftpd")
 				.WithName("vsftpd")
-				.WithPortBinding(20, 20)
-				.WithPortBinding(21, 21)
+				.WithPortBinding(20, true)
+				.WithPortBinding(port, 21)
 				.WithEnvironment("FTP_USER", "testUser")
 				.WithEnvironment("FTP_PASS", "testPass")
 				.WithEnvironment("PASV_ADDRESS", "127.0.0.1")
@@ -45,12 +45,15 @@ namespace FluentFTP.Tests.Integration
 				;
 			for (var i = 21100; i <= 21110; i++)
 			{
-				builder.WithPortBinding(i, i);
+				builder.WithPortBinding(i, true);
 			}
 			
-			builder.WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(21));
+			
+			builder.WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(port));
+			
 
 			var container = builder.Build();
+			
 			return container;
 		}
 	}
