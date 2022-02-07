@@ -1,3 +1,4 @@
+using DotNet.Testcontainers.Containers.Modules;
 using FluentFTP.Tests.Integration;
 using System;
 using System.Diagnostics;
@@ -10,9 +11,12 @@ namespace FluentFTP.Tests.System
     public class IntegrationTests : IDisposable
     {
 		private readonly FtpClient _ftpClient;
+		private readonly TestcontainersContainer _ftpContainer;
 
 		public IntegrationTests()
 		{
+			_ftpContainer = FtpUtil.GetFtpContainer();
+			_ftpContainer.StartAsync().Wait();
 			_ftpClient = FtpUtil.GetFtpClient();
 			FtpUtil.CleanFtp(_ftpClient);
 		}
@@ -21,6 +25,8 @@ namespace FluentFTP.Tests.System
 		{
 			if (_ftpClient != null)
 				_ftpClient.Dispose();
+			if (_ftpContainer != null)
+				_ftpContainer.DisposeAsync().AsTask().Wait();
 			GC.SuppressFinalize(this);
 		}
 

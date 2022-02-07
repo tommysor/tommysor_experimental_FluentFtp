@@ -22,7 +22,8 @@ jobs:
     
     strategy:
       matrix:
-        ftpserverscript: ['vsftpd.sh', 'proftpd.sh']
+        #ftpserverscript: ['vsftpd.sh', 'proftpd.sh']
+        ftpserverscript: ['vsftpd.sh']
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -40,9 +41,9 @@ jobs:
           echo "# Make dir"
           mkdir "$ftpDir"
           
-          echo "# Start ftp server"
-          echo "$GITHUB_WORKSPACE/.github/workflows/${{ matrix.ftpserverscript }}"
-          . $GITHUB_WORKSPACE/.github/workflows/${{ matrix.ftpserverscript }}
+          #echo "# Start ftp server"
+          #echo "$GITHUB_WORKSPACE/.github/workflows/${{ matrix.ftpserverscript }}"
+          #. $GITHUB_WORKSPACE/.github/workflows/${{ matrix.ftpserverscript }}
 
       - name: Run tests
         run: |
