@@ -20,6 +20,10 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     
+    strategy:
+      matrix:
+        #ftpserverscript: ['vsftpd.sh', 'proftpd.sh']
+        ftpserverscript: ['vsftpd.sh']
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
@@ -37,20 +41,13 @@ jobs:
           echo "# Make dir"
           mkdir "$ftpDir"
           
-          echo "# Start ftp server"
-          docker run -d -v $ftpDir:/home/vsftpd \
-          -p 20:20 -p 21:21 -p 21100-21110:21100-21110 \
-          -e FTP_USER=testUser -e FTP_PASS=testPass \
-          -e PASV_ADDRESS=127.0.0.1 -e PASV_MIN_PORT=21100 -e PASV_MAX_PORT=21110 \
-          --name vsftpd --restart=always fauria/vsftpd
+          #echo "# Start ftp server"
+          #echo "$GITHUB_WORKSPACE/.github/workflows/${{ matrix.ftpserverscript }}"
+          #. $GITHUB_WORKSPACE/.github/workflows/${{ matrix.ftpserverscript }}
+
       - name: Run tests
         run: |
-          #echo "# Variables"
-          #export cleanScript="${{ GITHUB.WORKSPACE }}/.github/workflows/cleanFtp.sh"
-          #echo "cleanScript: '$cleanScript'"
-          
-          echo "# Run tests"
-          dotnet test -c Release FluentFTP.Tests.Integration/FluentFTP.Tests.Integration.csproj
+          dotnet test -c Release FluentFTP.Tests.Integration/FluentFTP.Tests.Integration.csproj -p:ParallelizeTestCollections=false
       
       - name: Check dir
         if: always()
